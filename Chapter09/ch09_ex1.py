@@ -90,10 +90,13 @@ def get_colors(filename: str = "crayola.gpl") -> Sequence[Color]:
         rdr = csv.reader(source, delimiter="\t")
         rows = dropwhile(lambda row: row[0] != "#", rdr)
         color_rows = islice(rows, 1, None)
-        colors = list(
-            Color(cast(tuple[int, int, int], tuple(map(int, color.split()))), name)
+        colors = [
+            Color(
+                cast(tuple[int, int, int], tuple(map(int, color.split()))),
+                name,
+            )
             for color, name in color_rows
-        )
+        ]
     return colors
 
 
@@ -402,8 +405,7 @@ def make_color_map(colors: Sequence[Color]) -> dict[RGB, Color]:
         min((euclidean(rgb, c), rgb, c) for c in colors)
         for rgb in product(bit3, bit3, bit3)
     )
-    color_map = dict((b[1], b[2]) for b in best_iter)
-    return color_map
+    return {b[1]: b[2] for b in best_iter}
 
 
 REPL_make_color_map = """

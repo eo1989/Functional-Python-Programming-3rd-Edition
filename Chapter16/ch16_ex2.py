@@ -36,8 +36,7 @@ def defect_reduce(input_file: TextIO) -> Counter[Shift_Type]:
     shift_type_iter = (
         (row.shift, row.defect_type) for row in defect_iter if row.defect_type
     )
-    tally = Counter(shift_type_iter)
-    return tally
+    return Counter(shift_type_iter)
 
 
 REPL_defect_reduce = """
@@ -213,8 +212,7 @@ def contingency_table(
 
     footers = ["total"]
     for t in sorted(type_totals):
-        footers.append(f"{type_totals[t]:3d}")
-        footers.append("")
+        footers.extend((f"{type_totals[t]:3d}", ""))
     footers.append(f"{total:3d}")
     table.add_row(*footers)
 

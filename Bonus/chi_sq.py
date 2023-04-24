@@ -72,9 +72,7 @@ def fact(k: int) -> int:
     >>> fact(4)
     24
     """
-    if k < 2:
-        return 1
-    return reduce(operator.mul, range(2,k+1))
+    return 1 if k < 2 else reduce(operator.mul, range(2,k+1))
 
 # The implementation uses ``reduce( operator.mul, ... )`` to compute
 # the product of a sequence of integer values.
@@ -121,14 +119,14 @@ def gamma(s: float, z: float) -> float:
     
     def terms(s: float, z: float) -> Iterator[float]:
         for k in range(1000):
-            term = ((-1)**k/fact(k))*(z**(s+k)/(s+k))
-            yield term
-    
-    T_ = TypeVar("T_")        
+            yield ((-1)**k/fact(k))*(z**(s+k)/(s+k))
+
+    T_ = TypeVar("T_")
     def take_until(function: Callable[[T_], bool], source: Iterable[T_]) -> Iterator[T_]:
         for v in source:
             if function(v): return
             yield v
+
     ε = 1E-8
     return sum(take_until(lambda t: abs(t) < ε, terms(s, z)))
 
@@ -498,11 +496,10 @@ def Gamma_Half(k: float) -> float:
     0.8862269
     """
     ε = 1E-6
-    if abs(k-int(k)-.5) < ε:
-        n = int(k-.5)
-        return fact(2*n)/(4**n*fact(n))*math.sqrt(math.pi)
-    else:
+    if abs(k - int(k) - 0.5) >= ε:
         return float(Gamma2(k))
+    n = int(k-.5)
+    return fact(2*n)/(4**n*fact(n))*math.sqrt(math.pi)
 
 # If the value is an :math:`n+\dfrac{1}{2} \pm \epsilon`, we'll use the special
 # close-form expression. If the value is not close to :math:`n+\dfrac{1}{2}`,

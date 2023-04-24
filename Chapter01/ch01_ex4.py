@@ -18,19 +18,15 @@ def main(source_path: Path = DEFAULT_PATH) -> None:
     with source_path.open() as source:
         rdr = csv.DictReader(source)
         for row in rdr:
-            if "-" in row["ZIP"]:
-                text_zip = row["ZIP"]
+            text_zip = row["ZIP"]
+            if "-" in text_zip:
                 missing_zeroes = 10 - len(text_zip)
-                if missing_zeroes:
-                    text_zip = missing_zeroes * "0" + text_zip
+            elif 5 < len(text_zip) < 9:
+                missing_zeroes = 9 - len(text_zip)
             else:
-                text_zip = row["ZIP"]
-                if 5 < len(row["ZIP"]) < 9:
-                    missing_zeroes = 9 - len(text_zip)
-                else:
-                    missing_zeroes = 5 - len(text_zip)
-                if missing_zeroes:
-                    text_zip = missing_zeroes * "0" + text_zip
+                missing_zeroes = 5 - len(text_zip)
+            if missing_zeroes:
+                text_zip = missing_zeroes * "0" + text_zip
             frequency[text_zip] += 1
     print(frequency)
 

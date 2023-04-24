@@ -31,9 +31,9 @@ from typing import TypeAlias
 
 RawPairIter: TypeAlias = Iterable[tuple[float, float]]
 
-pairs: Callable[[RawPairIter], list[Pair]] = lambda source: list(
+pairs: Callable[[RawPairIter], list[Pair]] = lambda source: [
     Pair(*row) for row in source
-)
+]
 
 REPL_test_pairs = """
 >>> from Chapter03.ch03_ex4 import (

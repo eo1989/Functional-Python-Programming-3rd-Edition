@@ -59,7 +59,7 @@ class Card(tuple[str, int]):
     __slots__ = ()
 
     def __new__(cls, rank: int, suit: str) -> "Card":
-        obj = super().__new__(
+        return super().__new__(
             Card,
             cast(
                 Iterable[Any],
@@ -69,7 +69,6 @@ class Card(tuple[str, int]):
                 ],
             ),
         )
-        return obj
 
     def __str__(self) -> str:
         return f"{self.rank:2d}{self.suit}"

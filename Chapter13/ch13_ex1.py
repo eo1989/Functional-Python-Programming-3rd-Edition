@@ -150,9 +150,7 @@ from pymonad.tools import curry
 
 @curry(1)  # type: ignore[misc]
 def range1n(n: int) -> range:
-    if n == 0:
-        return range(1, 2)  # Only the value 1
-    return range(1, n + 1)
+    return range(1, 2) if n == 0 else range(1, n + 1)
 
 
 from pymonad.tools import curry

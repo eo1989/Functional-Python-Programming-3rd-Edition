@@ -21,13 +21,12 @@ def distance(
 def redundant(
     lat1: float, lon1: float, lat2: float, lon2: float, R: float = 360 * 60 / math.tau
 ) -> float:
-    d = math.hypot(
+    return math.hypot(
         R
         * (math.radians(lon1) - math.radians(lon2))
         * math.cos((math.radians(lat1) + math.radians(lat2)) / 2),
         R * (math.radians(lat1) - math.radians(lat2)),
     )
-    return d
 
 
 def imperative(
@@ -52,8 +51,7 @@ def imperative(
     x2 = x ** 2
     y2 = y ** 2
     x2y2 = x2 + y2
-    d = math.sqrt(x2y2)
-    return d
+    return math.sqrt(x2y2)
 
 
 from pytest import approx

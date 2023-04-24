@@ -184,10 +184,10 @@ def rank2_rec(
         yield from yield_sequence(rank, same_rank_iter)
 
     def ranker(
-        sorted_iter: Iterator[tuple[BaseT, ...]],
-        base: int,
-        same_rank_list: list[tuple[BaseT, ...]],
-    ) -> Iterator[tuple[float, tuple[BaseT, ...]]]:
+            sorted_iter: Iterator[tuple[BaseT, ...]],
+            base: int,
+            same_rank_list: list[tuple[BaseT, ...]],
+        ) -> Iterator[tuple[float, tuple[BaseT, ...]]]:
         try:
             value = next(sorted_iter)
         except StopIteration:
@@ -203,8 +203,7 @@ def rank2_rec(
             yield from yield_sequence(
                 (base + 1 + base + dups) / 2, iter(same_rank_list)
             )
-            for rows in ranker(sorted_iter, base + dups, [value]):
-                yield rows
+            yield from ranker(sorted_iter, base + dups, [value])
 
     data_iter = iter(sorted(data, key=key))
     head = next(data_iter)
@@ -222,16 +221,16 @@ class Ranked_XY(PRecord):  # type: ignore [type-arg]
 
 
 def rank_xy(pairs: Sequence[Pair]) -> Iterator[Ranked_XY]:
-    data = list(Ranked_XY(rank=pmap(), raw=p) for p in pairs)
+    data = [Ranked_XY(rank=pmap(), raw=p) for p in pairs]
 
     for attribute_name in ("x", "y"):
         ranked = rank(data, lambda rxy: cast(float, getattr(rxy.raw, attribute_name)))
-        data = list(
+        data = [
             original.set(
                 rank=original.rank.set(attribute_name, r)  # type: ignore [arg-type]
             )
             for r, original in ranked
-        )
+        ]
 
     yield from iter(data)
 
@@ -254,7 +253,7 @@ from pytest import fixture
 
 @fixture
 def series_data() -> list[Pair]:
-    data = [
+    return [
         Pair(x=10.0, y=8.04),
         Pair(x=8.0, y=6.95),
         Pair(x=13.0, y=7.58),
@@ -267,12 +266,11 @@ def series_data() -> list[Pair]:
         Pair(x=7.0, y=4.82),
         Pair(x=5.0, y=5.68),
     ]
-    return data
 
 
 @fixture
 def hght_mass_data() -> list[Pair]:
-    data = [
+    return [
         Pair(x=1.47, y=52.21),
         Pair(x=1.5, y=53.12),
         Pair(x=1.52, y=54.48),
@@ -289,7 +287,6 @@ def hght_mass_data() -> list[Pair]:
         Pair(x=1.8, y=72.19),
         Pair(x=1.83, y=74.46),
     ]
-    return data
 
 
 def test_spearman_rank_corr(

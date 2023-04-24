@@ -195,13 +195,11 @@ SCRIPT_MAP: dict[str, "WSGIApplication"] = {
 def routing(
     environ: "WSGIEnvironment", start_response: "StartResponse"
 ) -> Iterable[bytes]:
-    top_level = wsgiref.util.shift_path_info(environ)
-    if top_level:
+    if top_level := wsgiref.util.shift_path_info(environ):
         app = SCRIPT_MAP.get(top_level, welcome_app)
     else:
         app = welcome_app
-    content = app(environ, start_response)
-    return content
+    return app(environ, start_response)
 
 
 def server_demo() -> None:

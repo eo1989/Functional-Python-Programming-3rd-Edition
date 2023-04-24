@@ -280,9 +280,7 @@ def legs_filter(
 ) -> Leg_Iter:
     begin = next(lat_lon_iter)
     for end in lat_lon_iter:
-        if rejection_rule(begin, end):
-            pass
-        else:
+        if not rejection_rule(begin, end):
             yield begin, end
         begin = end
 

@@ -7,9 +7,7 @@ Chapter 10, Example Set 1
 def fib(n: int) -> int:
     if n == 0:
         return 0
-    if n == 1:
-        return 1
-    return fib(n - 1) + fib(n - 2)
+    return 1 if n == 1 else fib(n - 1) + fib(n - 2)
 
 
 def test_fib() -> None:
@@ -24,9 +22,7 @@ from functools import lru_cache
 def fibc(n: int) -> int:
     if n == 0:
         return 0
-    if n == 1:
-        return 1
-    return fibc(n - 1) + fibc(n - 2)
+    return 1 if n == 1 else fibc(n - 1) + fibc(n - 2)
 
 
 def test_fibc() -> None:
@@ -53,9 +49,7 @@ def performance_fib() -> None:
 
 
 def nfact(n: int) -> int:
-    if n == 0:
-        return 1
-    return n * nfact(n - 1)
+    return 1 if n == 0 else n * nfact(n - 1)
 
 
 def test_nfact() -> None:
@@ -64,9 +58,7 @@ def test_nfact() -> None:
 
 @lru_cache(maxsize=128)
 def cfact(n: int) -> int:
-    if n == 0:
-        return 1
-    return n * cfact(n - 1)
+    return 1 if n == 0 else n * cfact(n - 1)
 
 
 def test_cfact() -> None:

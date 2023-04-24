@@ -48,14 +48,14 @@ def column_data(*data_sets: list[str]) -> Iterator[list[str]]:
     """
 
     def year_fixup(row: list[str]) -> list[str]:
-        return list(c or "year" for c in row)
+        return [c or "year" for c in row]
 
-    row = list(ds[g * 12] for ds in data_sets for g in range(3))
+    row = [ds[g * 12] for ds in data_sets for g in range(3)]
     yield year_fixup(row)
 
     # Can be done with filter(None, ...), also.
     for i in range(1, 12):
-        row = list(ds[g * 12 + i] for ds in data_sets for g in range(3))
+        row = [ds[g * 12 + i] for ds in data_sets for g in range(3)]
         if any(row):
             yield row
 

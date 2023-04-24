@@ -46,9 +46,7 @@ def remote_source(**credentials: Any) -> Iterator[str]:
         try:
             ftp.login()
         except ftplib.error_perm as e:
-            if e.args[0].startswith("530"):
-                pass
-            else:
+            if not e.args[0].startswith("530"):
                 raise
         ftp.cwd("logs")
         downloads: list[Path] = []
@@ -464,7 +462,7 @@ def non_excluded_names(detail: AccessDetails) -> bool:
         "py-modindex.html",
     }
     path = detail.url.path.split("/")
-    return not any(p in name_exclude for p in path)
+    return all(p not in name_exclude for p in path)
 
 
 def non_excluded_ext(detail: AccessDetails) -> bool:
@@ -484,8 +482,7 @@ def path_filter(
 ) -> Iterable[AccessDetails]:
     non_empty = filter(non_empty_path, access_details_iter)
     nx_name = filter(non_excluded_names, non_empty)
-    nx_ext = filter(non_excluded_ext, nx_name)
-    yield from nx_ext
+    yield from filter(non_excluded_ext, nx_name)
 
 
 def test_path_filter(example_log_dir: Path) -> None:
@@ -594,7 +591,7 @@ def test_book_filter(example_log_dir: Path) -> None:
     file_iter = example_log_dir.glob("*.log.gz")
     lines = itertools.chain.from_iterable(map(local_gzip, file_iter))
     data = list(book_filter(path_filter(access_detail_iter(access_iter(lines)))))
-    books = list(d.url.path for d in data)
+    books = [d.url.path for d in data]
     assert books == [
         "/book/python-2.6/html/p02/p02c10_adv_seq.html",
         "/book/python-2.6/html/p04/p04c09_architecture.html",
@@ -614,7 +611,7 @@ def test_book_count(example_log_dir: Path) -> None:
     lines = itertools.chain.from_iterable(map(local_gzip, file_iter))
     data = list(book_filter(path_filter(access_detail_iter(access_iter(lines)))))
     totals = reduce_book_total(data)
-    assert list((k, totals[k]) for k in sorted(totals.keys())) == [
+    assert [(k, totals[k]) for k in sorted(totals.keys())] == [
         ("/book/python-2.6/html/p02/p02c10_adv_seq.html", 1),
         ("/book/python-2.6/html/p04/p04c09_architecture.html", 1),
     ]
@@ -624,8 +621,7 @@ def analysis(log_path: Path) -> dict[str, int]:
     """Count book chapters in a given log"""
     details = access_detail_iter(access_iter(local_gzip(log_path)))
     books = book_filter(path_filter(details))
-    totals = reduce_book_total(books)
-    return totals
+    return reduce_book_total(books)
 
 
 from collections.abc import Callable

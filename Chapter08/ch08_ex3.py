@@ -67,9 +67,7 @@ def accumulating_collatz(start: int) -> Iterator[int]:
     """
 
     def syracuse(n: int) -> int:
-        if n % 2 == 0:
-            return n // 2
-        return 3 * n + 1
+        return n // 2 if n % 2 == 0 else 3 * n + 1
 
     return while_not(
         lambda x: x == 1, accumulate(repeat(start), lambda a, b: syracuse(a))
@@ -85,9 +83,7 @@ def quartiles(trip: list[LegNT]) -> list[int]:
     distances = (leg.distance for leg in trip)
     distance_accum = tuple(accumulate(distances))
     total = distance_accum[-1] + 1.0
-    quartiles = list(int(4 * d / total) for d in distance_accum)
-    # print( list(quartiles[a:a+16] for a in range(0,len(quartiles),16)) )
-    return quartiles
+    return [int(4 * d / total) for d in distance_accum]
 
 
 def test_quartiles() -> None:
@@ -498,8 +494,8 @@ from collections.abc import Iterable
 
 def mean_t(source: Iterable[float]) -> float:
     it_0, it_1 = tee(iter(source), 2)
-    N = sum(1 for x in it_0)
-    sum_x = sum(x for x in it_1)
+    N = sum(1 for _ in it_0)
+    sum_x = sum(it_1)
     return sum_x / N
 
 

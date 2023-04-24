@@ -99,7 +99,7 @@ def pfactorsr(x: int) -> Iterator[int]:
     """Pure Recursion factors. Limited to numbers below about 4,000,000"""
 
     def factor_n(x: int, n: int) -> Iterator[int]:
-        if n * n > x:
+        if n**2 > x:
             yield x
             return
         if x % n == 0:

@@ -5,11 +5,7 @@ Chapter 1, Example Set 1
 
 
 def sum_numeric(limit: int = 10) -> int:
-    s = 0
-    for n in range(1, limit):
-        if n % 3 == 0 or n % 5 == 0:
-            s += n
-    return s
+    return sum(n for n in range(1, limit) if n % 3 == 0 or n % 5 == 0)
 
 
 def test_sum_numeric() -> None:
@@ -17,10 +13,7 @@ def test_sum_numeric() -> None:
 
 
 def sum_object_light(limit: int = 10) -> int:
-    m: list[int] = list()
-    for n in range(1, limit):
-        if n % 3 == 0 or n % 5 == 0:
-            m.append(n)
+    m: list[int] = [n for n in range(1, limit) if n % 3 == 0 or n % 5 == 0]
     return sum(m)
 
 
@@ -53,9 +46,7 @@ from collections.abc import Sequence, Callable
 
 def foldr(seq: Sequence[int], op: Callable[[int, int], int], init: int) -> int:
     """Recursive reduce operation, fold from right to left."""
-    if len(seq) == 0:
-        return init
-    return op(seq[0], foldr(seq[1:], op, init))
+    return init if len(seq) == 0 else op(seq[0], foldr(seq[1:], op, init))
 
 
 def test_foldr() -> None:
@@ -67,9 +58,7 @@ from collections.abc import Sequence
 
 
 def sumr(seq: Sequence[int]) -> int:
-    if len(seq) == 0:
-        return 0
-    return seq[0] + sumr(seq[1:])
+    return 0 if len(seq) == 0 else seq[0] + sumr(seq[1:])
 
 
 REPL_sumr = """
@@ -198,15 +187,11 @@ def folding() -> None:
 
 
 def foldleft(n: int) -> list[int]:
-    if n == 0:
-        return []
-    return foldleft(n - 1) + [n]
+    return [] if n == 0 else foldleft(n - 1) + [n]
 
 
 def foldright(n: int, v: int = 1) -> list[int]:
-    if v == n:
-        return [v]
-    return [v] + foldright(n, v + 1)
+    return [v] if v == n else [v] + foldright(n, v + 1)
 
 
 def test_fold_left_right() -> None:

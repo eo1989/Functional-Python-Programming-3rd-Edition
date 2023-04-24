@@ -112,9 +112,7 @@ True
 def isprimer(n: int) -> bool:
     def iscoprime(k: int, a: int, b: int) -> bool:
         """Is k coprime with a value in the given range?"""
-        if a == b:
-            return True
-        return (k % a != 0) and iscoprime(k, a + 1, b)
+        return True if a == b else (k % a != 0) and iscoprime(k, a + 1, b)
 
     return iscoprime(n, 2, int(math.sqrt(n)) + 1)
 
@@ -135,17 +133,12 @@ def test_isprimer() -> None:
 
 def isprimei(n: int) -> bool:
     """Is n prime?"""
-    if n < 2:
+    if n < 2 or n != 2 and n % 2 == 0:
         return False
     elif n == 2:
         return True
-    elif n % 2 == 0:
-        return False
     else:
-        for i in range(3, 1 + int(math.sqrt(n)), 2):
-            if n % i == 0:
-                return False
-        return True
+        return all(n % i != 0 for i in range(3, 1 + int(math.sqrt(n)), 2))
 
 
 def test_isprimei() -> None:
@@ -186,7 +179,7 @@ def isprimeg(n: int) -> bool:
         return True
     if n % 2 == 0:
         return False
-    return not any(n % p == 0 for p in range(3, int(math.sqrt(n)) + 1, 2))
+    return all(n % p != 0 for p in range(3, int(math.sqrt(n)) + 1, 2))
 
 
 def test_isprimeg() -> None:
@@ -401,9 +394,11 @@ from typing import TextIO
 
 
 def strip_head(source: TextIO, line: str) -> tuple[TextIO, str]:
-    if len(line.strip()) == 0:
-        return source, source.readline()
-    return strip_head(source, source.readline())
+    return (
+        strip_head(source, source.readline())
+        if line.strip()
+        else (source, source.readline())
+    )
 
 
 def get_columns(source: TextIO, line: str) -> Iterator[str]:
@@ -432,17 +427,17 @@ def performance() -> None:
     assert len(primes) == 1000
 
     start = time.perf_counter()
-    for repeat in range(1000):
+    for _ in range(1000):
         assert all(isprimei(x) for x in primes)
     print(f"all() {time.perf_counter() - start:.3f}")
 
     start = time.perf_counter()
-    for repeat in range(1000):
-        assert not any(not isprimei(x) for x in primes)
+    for _ in range(1000):
+        assert all(isprimei(x) for x in primes)
     print(f"not any() {time.perf_counter() - start:.3f}")
 
     start = time.perf_counter()
-    for repeat in range(1000):
+    for _ in range(1000):
         assert reduce(lambda x, y: x and y, (isprimei(x) for x in primes))
     print(f"reduce(and,...) {time.perf_counter() - start:.3f}")
 
