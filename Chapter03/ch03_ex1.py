@@ -80,9 +80,7 @@ def shifty(b: int) -> int:
 
 
 def multy(b: int) -> int:
-    if b == 0:
-        return 1
-    return 2 * multy(b - 1)
+    return 1 if b == 0 else 2 * multy(b - 1)
 
 
 def faster(b: int) -> int:
@@ -95,9 +93,9 @@ def faster(b: int) -> int:
 
 
 def test_mults() -> None:
-    assert shifty(17) - 1 == 131071
-    assert multy(17) - 1 == 131071
-    assert faster(17) - 1 == 131071
+    assert shifty(17) == 131072
+    assert multy(17) == 131072
+    assert faster(17) == 131072
 
 
 # Implementations of Mersenne with strategy objects plugged in properly.

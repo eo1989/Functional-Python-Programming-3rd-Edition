@@ -96,8 +96,7 @@ import json
 
 @to_bytes
 def serialize_json(data: list[dict[str, Any]], **kwargs: str) -> str:
-    text = json.dumps(data, sort_keys=True)
-    return text
+    return json.dumps(data, sort_keys=True)
 
 
 REPL_serialize_json = """
@@ -151,8 +150,7 @@ def serialize_xml(
     cells_iter = ("".join(f"<{k}>{v!s}</{k}>" for k, v in row.items()) for row in data)
     rows = "".join(f"<{row_tag}>{cells}</{row_tag}>" for cells in cells_iter)
     document = f"<{document_tag}>{rows}</{document_tag}>"
-    text = XML_TEMPLATE.substitute(document=document)
-    return text
+    return XML_TEMPLATE.substitute(document=document)
 
 
 import string
@@ -192,8 +190,7 @@ def serialize_html(data: list[dict[str, Any]], **kwargs: str) -> str:
         "".join(f'<td column="{k}">{v!s}</td>' for k, v in row.items()) for row in data
     )
     rows = "\n".join(f"<tr>{cells}</tr>" for cells in cells_iter)
-    text = HTML_TEMPLATE.substitute(head=header, rows=rows)
-    return text
+    return HTML_TEMPLATE.substitute(head=header, rows=rows)
 
 
 SERIALIZERS: dict[str, Serializer] = {
@@ -269,18 +266,17 @@ from flask import request, abort, make_response, Response
 
 
 def format() -> str:
-    if arg := request.args.get("form"):
-        try:
-            return {
-                "xml": "application/xml",
-                "html": "text/html",
-                "json": "application/json",
-                "csv": "text/csv",
-            }[arg]
-        except KeyError:
-            abort(404, "Unknown ?form=")
-    else:
+    if not (arg := request.args.get("form")):
         return request.accept_mimetypes.best or "text/html"
+    try:
+        return {
+            "xml": "application/xml",
+            "html": "text/html",
+            "json": "application/json",
+            "csv": "text/csv",
+        }[arg]
+    except KeyError:
+        abort(404, "Unknown ?form=")
 
 
 from flask import request, abort, make_response, Response
@@ -298,8 +294,7 @@ def index_view() -> Response:
         content_bytes = serialize(
             response_format, index_listofdicts, document_tag="Index", row_tag="Series"
         )
-        response = make_response(content_bytes, 200, {"Content-Type": response_format})
-        return response
+        return make_response(content_bytes, 200, {"Content-Type": response_format})
     except KeyError:
         abort(404, f"Unknown {response_format=}")
 
@@ -319,8 +314,7 @@ def series_view(series_id: str, form: str | None = None) -> Response:
         content_bytes = serialize(
             response_format, dataset, document_tag="Series", row_tag="Pair"
         )
-        response = make_response(content_bytes, 200, {"Content-Type": response_format})
-        return response
+        return make_response(content_bytes, 200, {"Content-Type": response_format})
     except KeyError:
         abort(404, f"Unknown {response_format=}")
 

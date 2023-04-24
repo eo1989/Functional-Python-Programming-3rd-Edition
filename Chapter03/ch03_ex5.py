@@ -121,19 +121,14 @@ def color_GPL_r(file_obj: TextIO) -> Iterator[Color]:
     def read_head(file_obj: TextIO) -> tuple[TextIO, str, str, str]:
         headers = "".join(file_obj.readline() for _ in range(4))
         if match := header_pat.match(headers):
-            return (
-                file_obj,
-                match.group(1),
-                match.group(2),
-                file_obj.readline().rstrip(),
-            )
+            return file_obj, match[1], match[2], file_obj.readline().rstrip()
         else:
             raise ValueError(f"invalid {headers!r}")
 
     def read_tail(
-        file_obj: TextIO, palette_name: str, columns: str, next_line: str
-    ) -> Iterator[Color]:
-        if len(next_line) == 0:
+            file_obj: TextIO, palette_name: str, columns: str, next_line: str
+        ) -> Iterator[Color]:
+        if not next_line:
             return
         r, g, b, *name = next_line.split()
         yield Color(int(r), int(g), int(b), " ".join(name))
@@ -163,7 +158,7 @@ def row_iter_gpl(file_obj: TextIO) -> tuple[str, str, Iterator[list[str]]]:
     def read_head(file_obj: TextIO) -> tuple[str, str, TextIO]:
         headers = "".join(file_obj.readline() for _ in range(4))
         if match := header_pat.match(headers):
-            return match.group(1), match.group(2), file_obj
+            return match[1], match[2], file_obj
         else:
             raise ValueError(f"invalid {headers!r}")
 
@@ -206,10 +201,7 @@ def load_colors(row_iter_gpl: tuple[str, str, Iterator[list[str]]]) -> dict[str,
     colors = tuple(
         Color(int(r), int(g), int(b), " ".join(name)) for r, g, b, *name in row_iter
     )
-    # print( colors )
-    mapping = dict((c.name, c) for c in colors)
-    # print( mapping )
-    return mapping
+    return {c.name: c for c in colors}
 
 
 REPL_test_gpl = """

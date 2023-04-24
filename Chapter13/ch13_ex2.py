@@ -23,8 +23,7 @@ def skip_header(source: IO, data: Maybe) -> Maybe:
 
 @curry(2)  # type: ignore[misc]
 def read_rest(source: IO, data: Maybe) -> Maybe:
-    txt = source.run().rstrip()
-    if txt:
+    if txt := source.run().rstrip():
         row = ListMonad(*txt.split("\t")).then(float)
         return Just(data + [row]).then(read_rest(source))
     else:
@@ -100,8 +99,7 @@ from pymonad.maybe import Maybe, Just
 
 
 def game_chain(dice: DiceT) -> Maybe:
-    outcome = Just(("", 0, [])).then(initial_roll(dice)).then(point_roll(dice))
-    return outcome
+    return Just(("", 0, [])).then(initial_roll(dice)).then(point_roll(dice))
 
 
 from unittest.mock import Mock

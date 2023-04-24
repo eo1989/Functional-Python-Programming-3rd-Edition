@@ -20,11 +20,11 @@ from collections.abc import Sequence
 
 
 def s0(samples: Sequence[float]) -> float:
-    return sum(1 for x in samples)  # or len(data)
+    return sum(1 for _ in samples)
 
 
 def s1(samples: Sequence[float]) -> float:
-    return sum(x for x in samples)  # or sum(data)
+    return sum(samples)
 
 
 def s2(samples: Sequence[float]) -> float:
@@ -68,7 +68,7 @@ def z(x: float, m_x: float, s_x: float) -> float:
 
 def test_z() -> None:
     d = [2, 4, 4, 4, 5, 5, 7, 9]
-    assert list(z(x, mean(d), stdev(d)) for x in d) == [
+    assert [z(x, mean(d), stdev(d)) for x in d] == [
         -1.5,
         -0.5,
         -0.5,
@@ -92,8 +92,7 @@ def corr(samples1: Sequence[float], samples2: Sequence[float]) -> float:
     m_2, s_2 = mean(samples2), stdev(samples2)
     z_1 = (z(x, m_1, s_1) for x in samples1)
     z_2 = (z(x, m_2, s_2) for x in samples2)
-    r = sum(zx1 * zx2 for zx1, zx2 in zip(z_1, z_2)) / len(samples1)
-    return r
+    return sum(zx1 * zx2 for zx1, zx2 in zip(z_1, z_2)) / len(samples1)
 
 
 from pytest import approx

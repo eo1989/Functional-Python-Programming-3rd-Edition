@@ -80,9 +80,7 @@ from collections.abc import Iterator
 def within(ε: float, iterable: Iterator[float]) -> float:
     def head_tail(ε: float, a: float, iterable: Iterator[float]) -> float:
         b = next(iterable)
-        if abs(a - b) <= ε:
-            return b
-        return head_tail(ε, b, iterable)
+        return b if abs(a - b) <= ε else head_tail(ε, b, iterable)
 
     return head_tail(ε, next(iterable), iterable)
 

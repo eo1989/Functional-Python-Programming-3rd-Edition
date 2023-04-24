@@ -252,15 +252,16 @@ def make_index(target_file, *source_list):
 def make_files():
     files_py = list(Path.cwd().glob("*.py"))
     txt_builds = [
-        build_if_needed(pylit, f.with_suffix(f.suffix+'.txt'), f)
+        build_if_needed(pylit, f.with_suffix(f'{f.suffix}.txt'), f)
         for f in files_py
     ]
     for item in txt_builds:
         logger.info(item)
 
     index_build = build_if_needed(
-        make_index, Path("index.txt"),
-        *[f.with_suffix(f.suffix+'.txt') for f in files_py]
+        make_index,
+        Path("index.txt"),
+        *[f.with_suffix(f'{f.suffix}.txt') for f in files_py],
     )
     logger.info(index_build)
 

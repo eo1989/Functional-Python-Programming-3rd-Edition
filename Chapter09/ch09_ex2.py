@@ -26,7 +26,7 @@ cost_data = """\
 def get_cost_matrix() -> list[tuple[int, ...]]:
     with io.StringIO(cost_data) as source:
         rdr = csv.reader(source)
-        cost = list(tuple(map(int, row)) for row in rdr)
+        cost = [tuple(map(int, row)) for row in rdr]
     return cost
 
 

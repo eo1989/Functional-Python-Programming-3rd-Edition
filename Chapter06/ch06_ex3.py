@@ -124,8 +124,7 @@ from typing import TextIO
 
 
 def row_iter_csv(source: TextIO) -> Iterator[list[str]]:
-    rdr = csv.reader(source, delimiter="\t")
-    return rdr
+    return csv.reader(source, delimiter="\t")
 
 
 from typing import cast
@@ -133,8 +132,7 @@ from typing import cast
 
 def float_none(data: str) -> float | None:
     try:
-        data_f = float(data)
-        return data_f
+        return float(data)
     except ValueError:
         return None
 
@@ -172,7 +170,7 @@ def row_iter_gpl(file_obj: TextIO) -> Head_Body:
 
     def read_head(file_obj: TextIO) -> tuple[tuple[str, str], TextIO]:
         if match := header_pat.match("".join(file_obj.readline() for _ in range(4))):
-            return (match.group(1), match.group(2)), file_obj
+            return (match[1], match[2]), file_obj
         else:
             raise ValueError("invalid header")
 

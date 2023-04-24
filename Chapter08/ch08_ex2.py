@@ -21,9 +21,7 @@ T = TypeVar("T")
 
 def find_first(terminate: Callable[[T], bool], iterator: Iterator[T]) -> T:
     i = next(iterator)
-    if terminate(i):
-        return i
-    return find_first(terminate, iterator)
+    return i if terminate(i) else find_first(terminate, iterator)
 
 
 from itertools import count

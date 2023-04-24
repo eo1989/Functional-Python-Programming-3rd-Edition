@@ -19,8 +19,7 @@ Group 4	5.8	3.8	6.1	5.6	6.2
 
 
 def row_iter_tab(source: TextIO) -> Iterator[list[str]]:
-    rdr = csv.reader(source, delimiter="\t")
-    return rdr
+    return csv.reader(source, delimiter="\t")
 
 
 def pieces(grouped: list[list[str]]) -> Iterator[tuple[Any, float]]:

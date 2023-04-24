@@ -33,8 +33,7 @@ def stdev(data: Sequence[float]) -> float:
     s2 = sum(x**2 for x in data)
 
     mean = s1 / s0
-    stdev = math.sqrt(s2 / s0 - mean**2)
-    return stdev
+    return math.sqrt(s2 / s0 - mean**2)
 
 
 def test_stdev() -> None:
@@ -49,7 +48,7 @@ def z(x: float, m_x: float, s_x: float) -> float:
 
 def test_z() -> None:
     d = [2, 4, 4, 4, 5, 5, 7, 9]
-    assert list(z(x, mean(d), stdev(d)) for x in d) == [
+    assert [z(x, mean(d), stdev(d)) for x in d] == [
         -1.5,
         -0.5,
         -0.5,

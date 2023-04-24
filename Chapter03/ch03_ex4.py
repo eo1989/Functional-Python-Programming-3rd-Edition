@@ -34,8 +34,7 @@ def float_none(data: str) -> float | None:
     1.23
     """
     try:
-        data_f = float(data)
-        return data_f
+        return float(data)
     except ValueError:
         return None
 
@@ -58,7 +57,7 @@ def head_map_filter(row_iter: Iterator[list[str]]) -> Iterator[list[float]]:
         return list(map(float_none, row))
 
     def all_numeric(row: R_Float) -> bool:
-        return not any(v is None for v in row)
+        return all(v is not None for v in row)
 
     return cast(Iterator[list[float]], filter(all_numeric, map(float_row, row_iter)))
 

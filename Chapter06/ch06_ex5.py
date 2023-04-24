@@ -44,7 +44,7 @@ def group_sort(trip: Iterable[Leg]) -> dict[int, int]:
     try:
         return dict(group(quantized))
     except StopIteration:
-        return dict()
+        return {}
 
 
 from collections import Counter

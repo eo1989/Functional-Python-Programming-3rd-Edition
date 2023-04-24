@@ -10,9 +10,7 @@ import operator
 
 @lru_cache(128)
 def fact(k: int) -> int:
-    if k < 2:
-        return 1
-    return reduce(operator.mul, range(2, int(k) + 1))
+    return 1 if k < 2 else reduce(operator.mul, range(2, k + 1))
 
 
 def test_fact() -> None:
@@ -33,8 +31,7 @@ def gamma(s: Fraction | int, z: Fraction | int) -> Fraction:
         """Terms for computing partial gamma"""
         for k in range(100):
             t2 = Fraction(z ** (s + k)) / (s + k)
-            term = Fraction((-1) ** k, fact(k)) * t2
-            yield term
+            yield Fraction((-1) ** k, fact(k)) * t2
         warnings.warn("More than 100 terms requested")
 
     def take_until(

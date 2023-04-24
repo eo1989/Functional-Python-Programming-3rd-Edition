@@ -82,8 +82,7 @@ from typing import Any
 
 def flatten(data: Iterable[Iterable[Any]]) -> Iterable[Any]:
     for line in data:
-        for x in line:
-            yield x
+        yield from line
 
 
 def test_flatten() -> None:
@@ -151,9 +150,11 @@ def strip_head(source: TextIO, line: str) -> tuple[TextIO, str]:
     ['more\\n']
 
     """
-    if len(line.strip()) == 0:
-        return source, source.readline()
-    return strip_head(source, source.readline())
+    return (
+        strip_head(source, source.readline())
+        if line.strip()
+        else (source, source.readline())
+    )
 
 
 def get_columns(source: TextIO, line: str) -> Iterator[str]:
@@ -224,11 +225,11 @@ ItemType = TypeVar("ItemType")
 
 def group_by_seq(n: int, sequence: Sequence[ItemType]) -> list[tuple[ItemType, ...]]:
     flat_iter = iter(sequence)
-    full_sized_items = list(
-        tuple(next(flat_iter) for i in range(n)) for row in range(len(sequence) // n)
-    )
-    trailer = tuple(flat_iter)
-    if trailer:
+    full_sized_items = [
+        tuple(next(flat_iter) for _ in range(n))
+        for _ in range(len(sequence) // n)
+    ]
+    if trailer := tuple(flat_iter):
         return full_sized_items + [trailer]
     else:
         return full_sized_items

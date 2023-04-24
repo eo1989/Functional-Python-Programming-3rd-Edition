@@ -215,7 +215,7 @@ ROW_COUNT = 0
 def row_counter(item: str) -> int:
     global ROW_COUNT
     rc = ROW_COUNT
-    if item == "":
+    if not item:
         ROW_COUNT += 1
     return rc
 
@@ -253,13 +253,15 @@ def make_samples(source: list[str]) -> list[dict[str, float]]:
     year_fixup = cons("year", drop(1, source))
     # Restructure to 12 groups of 3
     year, series_1, series_2, extra = list(partitionby(row_counter, year_fixup))
-    # Drop the first and the (empty) last
-    samples = [
-        {"year": int(year), "series_1": float(series_1), "series_2": float(series_2)}
+    return [
+        {
+            "year": int(year),
+            "series_1": float(series_1),
+            "series_2": float(series_2),
+        }
         for year, series_1, series_2 in drop(1, zip(year, series_1, series_2))
         if year
     ]
-    return samples
 
 
 def test_make_samples() -> None:

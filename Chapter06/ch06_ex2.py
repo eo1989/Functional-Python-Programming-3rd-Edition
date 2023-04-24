@@ -9,13 +9,11 @@ Point: TypeAlias = tuple[float, float]
 
 
 def syntax_check_1(trip: list[tuple[Point, Point, float]]) -> Iterator[float]:
-    quantized = (5 * (dist // 5) for start, stop, dist in trip)
-    return quantized
+    return (5 * (dist // 5) for start, stop, dist in trip)
 
 
 def syntax_check_2(trip: list[tuple[Point, Point, float]]) -> Iterator[float]:
-    quantized = (5 * (dist // 5) for _, _, dist in trip)
-    return quantized
+    return (5 * (dist // 5) for _, _, dist in trip)
 
 
 def test_syntax_check_1() -> None:
@@ -153,9 +151,10 @@ def test_group_by() -> None:
 
     binned_distance = lambda leg: 5 * (leg[2] // 5)
     by_distance = group_by(binned_distance, trip)
-    summary = list(
-        (distance, len(by_distance[distance])) for distance in sorted(by_distance)
-    )
+    summary = [
+        (distance, len(by_distance[distance]))
+        for distance in sorted(by_distance)
+    ]
     assert summary == [
         (0.0, 4),
         (5.0, 5),
@@ -245,9 +244,10 @@ def test_partition() -> None:
 
     binned_distance = lambda leg: 5 * (leg[2] // 5)
     by_distance = partition(binned_distance, trip)
-    summary = list(
-        (distance, len(by_distance[distance])) for distance in sorted(by_distance)
-    )
+    summary = [
+        (distance, len(by_distance[distance]))
+        for distance in sorted(by_distance)
+    ]
     assert summary == [
         (0.0, 4),
         (5.0, 5),
@@ -361,11 +361,11 @@ from collections.abc import Sequence
 
 
 def sum_x0(data: Sequence[float]) -> float:
-    return sum(1 for x in data)  # or len(data)
+    return sum(1 for _ in data)
 
 
 def sum_x1(data: Sequence[float]) -> float:
-    return sum(x for x in data)  # or sum(data)
+    return sum(data)
 
 
 def sum_x2(data: Sequence[float]) -> float:

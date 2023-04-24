@@ -20,9 +20,7 @@ def syracuse(n: int) -> int:
     >>> syracuse(16)
     8
     """
-    if n % 2 == 0:
-        return n // 2
-    return 3 * n + 1
+    return n // 2 if n % 2 == 0 else 3 * n + 1
 
 
 def until(

@@ -6,10 +6,7 @@ import sys
 
 
 def add(a: int, b: int) -> int:
-    if a == 0:
-        return b
-    else:
-        return add(a - 1, b + 1)
+    return b if a == 0 else add(a - 1, b + 1)
 
 
 def test_add() -> None:
@@ -17,10 +14,7 @@ def test_add() -> None:
 
 
 def fact(n: int) -> int:
-    if n == 0:
-        return 1
-    else:
-        return n * fact(n - 1)
+    return 1 if n == 0 else n * fact(n - 1)
 
 
 def test_fact() -> None:
@@ -62,7 +56,7 @@ def fasts(n: int) -> int:
     pending: deque[int] = deque()
     while n != 0:
         pending.append(n)
-        n = n - 1
+        n -= 1
     # Complete the pending work
     r = 1
     while pending:
@@ -102,8 +96,6 @@ def all_print(start: Path) -> int:
             elif path.is_dir():
                 if not path.stem.startswith("."):
                     pending.append(path)
-            else:  # Ignore other filesystem objects
-                pass
     return count
 
 
@@ -131,9 +123,7 @@ def test_fastexp() -> None:
 def fib(n: int) -> int:
     if n == 0:
         return 0
-    if n == 1:
-        return 1
-    return fib(n - 1) + fib(n - 2)
+    return 1 if n == 1 else fib(n - 1) + fib(n - 2)
 
 
 def test_fib() -> None:
@@ -237,12 +227,8 @@ REPL_test_mapg = """
 def fastexp_w(a: float, n: int) -> float:
     if n == 0:
         return 1
-    else:
-        q, r = divmod(n, 2)
-        if r == 1:
-            return a * fastexp_w(a, n - 1)
-        else:
-            return (t := fastexp_w(a, q)) * t
+    q, r = divmod(n, 2)
+    return a * fastexp_w(a, n - 1) if r == 1 else (t := fastexp_w(a, q)) * t
 
 
 def test_fastexp_w() -> None:
@@ -254,9 +240,7 @@ from collections.abc import Sequence
 
 
 def prodrc(collection: Sequence[float]) -> float:
-    if len(collection) == 0:
-        return 1
-    return collection[0] * prodrc(collection[1:])
+    return 1 if len(collection) == 0 else collection[0] * prodrc(collection[1:])
 
 
 def test_prod_rc() -> None:

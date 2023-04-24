@@ -9,7 +9,7 @@ from typing import NoReturn
 
 def server_demo() -> NoReturn:
     httpd = HTTPServer(("localhost", 8080), SimpleHTTPRequestHandler)
-    print(f"Serving on http://localhost:8080...")
+    print("Serving on http://localhost:8080...")
     while True:
         httpd.handle_request()
     httpd.shutdown()

@@ -43,15 +43,11 @@ def test_clean_decimal_2() -> None:
 
 def remove(text: str, chars: str) -> str:
     """Remove all of the given chars from a string."""
-    if chars:
-        return remove(text.replace(chars[0], ""), chars[1:])
-    return text
+    return remove(text.replace(chars[0], ""), chars[1:]) if chars else text
 
 
 def clean_decimal_3(text: str | None) -> Decimal | None:
-    if text is None:
-        return None
-    return Decimal(remove(text, "$,"))
+    return None if text is None else Decimal(remove(text, "$,"))
 
 
 def test_clean_decimal_3() -> None:

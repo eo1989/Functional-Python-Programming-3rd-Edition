@@ -11,6 +11,7 @@ http://localhost:8080/anscombe/III?form=csv
 http://localhost:8080/anscombe/IV?form=html
 
 """
+
 # pylint: disable=wrong-import-position,wrong-import-order,reimported
 
 from Chapter03.ch03_ex5 import (
@@ -25,8 +26,9 @@ class Pair(NamedTuple):
 
 RawPairIter = Iterable[Tuple[float, float]]
 
-pairs: Callable[[RawPairIter], List[Pair]] \
-     = lambda source: list(Pair(*row) for row in source)
+pairs: Callable[[RawPairIter], List[Pair]] = lambda source: [
+    Pair(*row) for row in source
+]
 
 def raw_data() -> Dict[str, List[Pair]]:
     """
@@ -103,13 +105,12 @@ def serialize_html(series: str, data: List[Pair]) -> str:
     >>> serialize_html( "test", data ) #doctest: +ELLIPSIS
     b'<html>...<tr><td>2</td><td>3</td></tr>\\n<tr><td>5</td><td>7</td></tr>...
     """
-    text = data_page.substitute(
+    return data_page.substitute(
         title=series,
         rows="\n".join(
-            "<tr><td>{0.x}</td><td>{0.y}</td></tr>".format(row)
-            for row in data)
-        )
-    return text
+            "<tr><td>{0.x}</td><td>{0.y}</td></tr>".format(row) for row in data
+        ),
+    )
 
 import json
 @to_bytes
@@ -120,8 +121,7 @@ def serialize_json(series: str, data: List[Pair]) -> str:
     b'[{"x": 2, "y": 3}, {"x": 5, "y": 7}]'
     """
     obj = [dict(x=r.x, y=r.y) for r in data]
-    text = json.dumps(obj, sort_keys=True)
-    return text
+    return json.dumps(obj, sort_keys=True)
 
 import csv
 import io
